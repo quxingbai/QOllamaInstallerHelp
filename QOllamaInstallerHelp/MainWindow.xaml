@@ -6,8 +6,17 @@
         xmlns:local="clr-namespace:QOllamaInstallerHelp"
         mc:Ignorable="d"
         xmlns:views="clr-namespace:QOllamaInstallerHelp.Views"
-        Title="Ollama安装辅助器" Height="450" Width="800">
+        xmlns:cps="clr-namespace:QOllamaInstallerHelp.Views.CPanels"
+        Title="Ollama工具" Height="450" Width="800">
     <Grid>
-        <views:InstallerSelectPage/>
+        <cps:PagePanel x:Name="PAGE_PANEL">
+            <Border>
+                <views:InstallerSelectPage/>
+            </Border>
+            <Border>
+                <views:RegistryEditPage/>
+            </Border>
+        </cps:PagePanel>
+        <Button Content="注册表 / 安装" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="25" Padding="5" Name="BT_NextPage" Click="BT_NextPage_Click"/>
     </Grid>
 </Window>

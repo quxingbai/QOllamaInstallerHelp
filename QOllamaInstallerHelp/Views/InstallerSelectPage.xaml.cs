@@ -1,11 +1,14 @@
-﻿using QOllamaInstallerHelp.Utils;
+﻿using Microsoft.Win32;
+using QOllamaInstallerHelp.Utils;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,12 +29,23 @@ namespace QOllamaInstallerHelp.Views
     /// </summary>
     public partial class InstallerSelectPage : UserControl
     {
+        public class OllamaRegistryItemViewModel : INotifyPropertyChanged
+        {
+            public OllamaRegistryTooltipItem RegistryItem { get; set; }
+            public String Name => RegistryItem.Name;
+            public object Value { get; set; }
+            public object DefaultValue { get; set; }
+            public string Description { get; set; }
+
+            public event PropertyChangedEventHandler? PropertyChanged;
+        }
         private class InstallerSelectPageViewModel : INotifyPropertyChanged
         {
             public ICommand COMMAND_OpenOllamaUrlCommand { get; set; }
             public ICommand COMMAND_TryInstall { get; set; }
             public String OllamaSetupExePath { get; set; } = ".\\OllamaSetup.exe";
             public String OllamaInstallPath { get; set; } = "C:\\Ollama";
+            public string OllamaImageUrl { get; set; } = "https://mintcdn.com/ollama-9269c548/XefrxzvUktkk84RL/images/logo-dark.png?fit=max&auto=format&n=XefrxzvUktkk84RL&q=85&s=c214b467f5623414c31d4e05c66110fb";
             public bool _IsWriteRegistry = true;
             public bool IsWriteRegistry
             {
@@ -48,6 +62,11 @@ namespace QOllamaInstallerHelp.Views
                 get { return _IsInstalling; }
                 set { _IsInstalling = value; PropertyChanged?.Invoke(value, new(nameof(IsInstalling))); }
             }
+
+
+            public ObservableCollection<OllamaRegistryItemViewModel> RegistryItems { get; set; } = new();
+            public string OLLAMA_HOST { get; set; }
+
             public InstallerSelectPageViewModel(Dispatcher dispatcher)
             {
                 COMMAND_OpenOllamaUrlCommand = new ActionCommand((obj) =>
@@ -81,7 +100,7 @@ namespace QOllamaInstallerHelp.Views
 
             public void TryInstall()
             {
-                if (IsWriteRegistry && !PCUtils.IsAdministrator()) throw new("没有管理员权限，无法安装。因为修改注册表需要管理员权限。");
+                //if (IsWriteRegistry && !PCUtils.IsAdministrator()) throw new("没有管理员权限，无法安装。因为修改注册表需要管理员权限。");
                 if (!File.Exists(OllamaSetupExePath)) throw new("OllamaSetup.exe 文件地址不对，这是个空地址\n" + OllamaSetupExePath);
                 if (!Directory.Exists(OllamaInstallPath)) throw new("安装地址不存在，需要重新输入。\n" + OllamaInstallPath);
             }
@@ -102,11 +121,14 @@ namespace QOllamaInstallerHelp.Views
                 {
                     if (IsWriteRegistry)
                     {
-                        var registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Session Manager\Environment",true);
-                        RegistryHelp registry_help = new(registry);
-                        registry_help.SetOllamaPath(installPath);
-                        registry.Flush();
-                        registry.Close();
+                        //var registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\Session Manager\Environment", true);
+                        RegistryHelp.UseSystemEnvironmentRegistry(registry =>
+                        {
+                            var ip = IPEndPoint.Parse(OLLAMA_HOST);
+                            RegistryHelp registry_help = new(registry);
+                            registry_help.SetOllamaPath(installPath);
+                            if (OLLAMA_HOST != null) registry_help.SetOllamaListenIP($"{ip.Address}:{ip.Port}");
+                        });
                     }
                     MessageBox.Show("安装成功");
                 }

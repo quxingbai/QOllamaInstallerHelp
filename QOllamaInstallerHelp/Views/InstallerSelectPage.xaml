@@ -20,6 +20,10 @@
         <Border Padding="15">
             <Grid>
                 <StackPanel>
+                    <WrapPanel  HorizontalAlignment="Center" Margin="10">
+                        <TextBlock Text="OLLAMA 安装辅助工具" Foreground="DimGray" FontSize="15" VerticalAlignment="Center"/>
+                        <Image Source="{Binding OllamaImageUrl}" Width="30" Margin="10,0" VerticalAlignment="Center"/>
+                    </WrapPanel>
                     <GroupBox Header="下载Ollama" ToolTip="下载过就跳过">
                         <Border Padding="5">
                             <TextBlock Foreground="Black">
@@ -35,7 +39,7 @@
                             <cc:PathSelectTextBox Text="{Binding OllamaSetupExePath}"/>
                         </Border>
                     </GroupBox>
-                    <GroupBox Header="安装到哪里" ToolTip="默认是在C盘，但也可以修改">
+                    <GroupBox Header="安装到哪里" ToolTip="默认是在C盘，但也可以修改，会判断里面有没有ollama.exe，如果发现了就跳过安装的步骤。">
                         <Border Padding="5">
                             <StackPanel>
                                 <cc:PathSelectTextBox Text="{Binding OllamaInstallPath}" PathType="Fold"/>
@@ -45,7 +49,13 @@
                     <GroupBox Header="其他（需要管理员权限）" ToolTip="这里需要管理员权限，不安装会出现一些问题">
                         <Border Padding="5">
                             <WrapPanel>
+                                <WrapPanel.Resources>
+                                    <Style TargetType="cc:LabelTextBox">
+                                        <Setter Property="Margin" Value="15,0"/>
+                                    </Style>
+                                </WrapPanel.Resources>
                                 <ToggleButton IsChecked="{Binding IsWriteRegistry}" Content="写入注册表"/>
+                                <cc:LabelTextBox LabelTitle="监听地址" Text="{Binding OLLAMA_HOST}" EmptyTextDisplay="127.0.0.1:11434"/>
                             </WrapPanel>
                         </Border>
                     </GroupBox>

@@ -1,4 +1,5 @@
 ﻿using QOllamaInstallerHelp.Utils;
+using QOllamaInstallerHelp.Views.CPanels;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,10 +21,12 @@ namespace QOllamaInstallerHelp
         public MainWindow()
         {
             InitializeComponent();
-            //if (!PCUtils.IsAdministrator())
-            //{
-            //    PCUtils.RestartAsAdministrator();
-            //}
+        }
+
+
+        private void BT_NextPage_Click(object sender, RoutedEventArgs e)
+        {
+            PAGE_PANEL.NextPage();
         }
     }
 }
