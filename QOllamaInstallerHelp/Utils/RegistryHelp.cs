@@ -22,7 +22,7 @@ namespace QOllamaInstallerHelp.Utils
         private static Dictionary<string, OllamaRegistryTooltipItem> Items = new Dictionary<string, OllamaRegistryTooltipItem>();
         static OllamaRegistryITooltiptemsManager()
         {
-            string localJsonFilePath = "./OLLAMA_RegistryTooltips.json";
+            string localJsonFilePath = "./LocalData/OLLAMA_RegistryTooltips.json";
             if (File.Exists(localJsonFilePath))
             {
                 string text = File.ReadAllText(localJsonFilePath);

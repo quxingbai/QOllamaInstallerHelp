@@ -1,0 +1,82 @@
+[
+  {
+    "Name": "OLLAMA_HOST",
+    "DefaultValue": "127.0.0.1:11434",
+    "ToolTip": "Ollama 服务监听的网络地址和端口。默认值 127.0.0.1:11434 表示只允许本机访问，端口为11434。如需允许局域网或其他设备访问，可设置为 0.0.0.0:11434。修改后需重启服务生效。[citation:1][citation:2][citation:9]"
+  },
+  {
+    "Name": "OLLAMA_MODELS",
+    "DefaultValue": "Windows: C:\\Users\\%username%\\.ollama\\models\\nmacOS: ~/.ollama/models\\nLinux: /usr/share/ollama/.ollama/models",
+    "ToolTip": "模型文件的存放目录。默认存储在用户目录下，Windows系统建议修改到其他盘符（如 D:\\OllamaModels）以避免C盘空间不足。修改后需重启服务生效。[citation:1][citation:2][citation:9]"
+  },
+  {
+    "Name": "OLLAMA_KEEP_ALIVE",
+    "DefaultValue": "5m",
+    "ToolTip": "模型加载到内存中后的存活时间。默认值 5m 表示模型在处理完请求后将在内存中保留5分钟，便于后续快速响应。设置为 0 表示立即卸载，设置为负数（如 -1）表示永久驻留。支持单位：s（秒）、m（分钟）、h（小时）。[citation:2][citation:4][citation:9]"
+  },
+  {
+    "Name": "OLLAMA_CONTEXT_LENGTH",
+    "DefaultValue": "2048 (或 4096，取决于版本)",
+    "ToolTip": "模型默认的上下文窗口大小（以token为单位），即模型一次能处理的最大文本长度。默认值为2048或4096个token。处理长文本时需要调大此值（如8192），但会显著增加显存占用。也可通过API的 num_ctx 参数或 /set parameter 命令临时修改。[citation:1][citation:4][citation:8]"
+  },
+  {
+    "Name": "OLLAMA_NUM_PARALLEL",
+    "DefaultValue": "1 (或自动选择)",
+    "ToolTip": "最大并行请求处理数量。默认值为1，表示单并发串行处理请求。如果系统内存充足，Ollama 可能会自动设为4。增加此值可以提高并发处理能力，但会消耗更多内存/显存。从 v0.1.33 开始支持。[citation:2][citation:4][citation:5]"
+  },
+  {
+    "Name": "OLLAMA_MAX_LOADED_MODELS",
+    "DefaultValue": "1 (或 GPU数量 × 3)",
+    "ToolTip": "最多同时加载到内存中的模型数量。默认值为1，即同一时间只能有一个模型驻留在内存。如果显存足够大且需要在不同模型间频繁切换，可以调大此值。使用多GPU时默认约为GPU数量的3倍。[citation:2][citation:4][citation:5]"
+  },
+  {
+    "Name": "OLLAMA_MAX_QUEUE",
+    "DefaultValue": "512",
+    "ToolTip": "请求队列的最大长度。当并发请求超过处理能力时，超出此数量的请求将被拒绝（返回503错误）。默认512，高并发场景可按需调大。[citation:2][citation:4][citation:5]"
+  },
+  {
+    "Name": "OLLAMA_ORIGINS",
+    "DefaultValue": "127.0.0.1, 0.0.0.0",
+    "ToolTip": "允许跨域请求的HTTP来源列表，使用逗号分隔。默认只允许来自 127.0.0.1 和 0.0.0.0 的请求。如需允许浏览器扩展或Web前端（如Open WebUI）访问，可设置为 * 或明确指定扩展源（如 chrome-extension://*）。[citation:1][citation:2][citation:8]"
+  },
+  {
+    "Name": "OLLAMA_DEBUG",
+    "DefaultValue": "0 (或未设置)",
+    "ToolTip": "是否开启调试日志输出。设置为 1 时，Ollama 会输出详细的调试信息，便于排查问题。默认关闭。生产环境建议保持关闭，仅在调试时开启。[citation:2][citation:6][citation:8]"
+  },
+  {
+    "Name": "OLLAMA_FLASH_ATTENTION",
+    "DefaultValue": "未设置 (默认关闭)",
+    "ToolTip": "是否启用 Flash Attention 优化机制。设置为 1 时启用，可以加速推理计算并减少显存占用。这是一个实验性功能，未来版本可能默认启用。需要配合 OLLAMA_KV_CACHE_TYPE 使用效果更佳。[citation:4][citation:7][citation:8]"
+  },
+  {
+    "Name": "OLLAMA_SCHED_SPREAD",
+    "DefaultValue": "false (或未设置)",
+    "ToolTip": "是否跨所有GPU调度模型。设置为 true 或 1 时，在多GPU环境下会尽量将模型分散到所有可用GPU上，避免单一显卡过载导致资源分配不均。默认关闭。[citation:4][citation:8]"
+  },
+  {
+    "Name": "OLLAMA_NOPRUNE",
+    "DefaultValue": "false (或未设置)",
+    "ToolTip": "启动时是否不修剪模型blob文件。默认 false 表示启动时会自动清理未使用的blob文件。设置为 true 或 1 可以跳过此过程，加快服务重启速度。[citation:4]"
+  },
+  {
+    "Name": "OLLAMA_KV_CACHE_TYPE",
+    "DefaultValue": "f16",
+    "ToolTip": "KV缓存的量化类型。可选值：f16（16位浮点）、q8_0（8位量化）、q4_0（4位量化）。使用更低精度可以减少显存占用，尤其适合长上下文场景。默认 f16。需与 OLLAMA_FLASH_ATTENTION=1 配合使用。[citation:4][citation:7]"
+  },
+  {
+    "Name": "OLLAMA_GPU_LAYERS",
+    "DefaultValue": "自动选择",
+    "ToolTip": "指定将模型的多少层放到GPU上计算。当显存不足时，可以降低此值让部分层回退到CPU计算，防止程序崩溃。默认会自动选择尽可能多的GPU层数。[citation:3]"
+  },
+  {
+    "Name": "OLLAMA_LOAD_TIMEOUT",
+    "DefaultValue": "5m",
+    "ToolTip": "模型加载的最大超时时间。默认5分钟。如果模型加载超过此时长，服务将返回错误。可按需调整为更长的时间（如 10m）。[citation:4]"
+  },
+  {
+    "Name": "HTTPS_PROXY",
+    "DefaultValue": "未设置",
+    "ToolTip": "HTTPS代理服务器地址。当Ollama需要从互联网拉取模型时，可通过此代理访问。注意应设置 HTTPS_PROXY 而非 HTTP_PROXY，因为模型拉取使用HTTPS协议。示例：https://proxy.example.com:8080。[citation:1][citation:9]"
+  }
+]
