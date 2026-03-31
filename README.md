@@ -1,4 +1,3 @@
-<img width="650" height="306" alt="image" src="https://github.com/user-attachments/assets/e11b2ccb-9454-45ad-8413-a6725ae9695e" />
 # Ollama工具
 
 > Ollama安装时候 默认安装到C盘，安装到其他位置需要在命令行执行额外参数。
